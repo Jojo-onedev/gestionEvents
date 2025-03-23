@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,4 +50,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/participant/events', [EventController::class, 'showEventsForParticipants'])->name('participant.events');
 
+Route::get('/generate-report', [ReportController::class, 'generateReport']);
 require __DIR__.'/auth.php';
