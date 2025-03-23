@@ -28,27 +28,25 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
-    {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'string', 'in:participant,createur'],
-        ]);
+{    
+    $data = $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'password' => ['required', 'string', 'min:8', 'confirmed'],
+        'role' => ['required', 'string', 'in:participant,createur'],
+    ]);
 
-        $data['role'] = 'participant'; // ou 'createur' selon ton besoin
+    $data['role'] = $request->input('role', 'participant'); // Utilise le rôle envoyé par le formulaire
 
-        $data['password'] = bcrypt($data['password']); // Hachage du mot de passe
+    $data['password'] = bcrypt($data['password']); // Hachage du mot de passe
 
-        $user = User::create($data);
+    $user = User::create($data);
 
+    // event(new Registered($user));
 
-        // event(new Registered($user));
+    Auth::login($user);
 
-        Auth::login($user);
+    return redirect(route('dashboard', absolute: false));
+}
 
-        // return redirect(RouteServiceProvider::HOME);
-
-        return redirect(route('dashboard', absolute: false));
-    }
 }
