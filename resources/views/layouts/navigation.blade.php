@@ -16,7 +16,15 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+
+                @if(auth()->check() && auth()->user()->role === 'participant')
+                    <a href="{{ route('events.index') }}" class="text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">
+                            Voir les événements
+                    </a>
+                @endif
             </div>
+
+
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">

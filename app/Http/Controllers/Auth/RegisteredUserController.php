@@ -42,11 +42,12 @@ class RegisteredUserController extends Controller
 
     $user = User::create($data);
 
-    // event(new Registered($user));
+    
 
     Auth::login($user);
 
-    return redirect(route('dashboard', absolute: false));
+    // Redirection selon le rôle
+    return redirect()->route($user->role . '.dashboard');
 }
 
 }
