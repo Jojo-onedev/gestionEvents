@@ -34,8 +34,8 @@ class AuthenticatedSessionController extends Controller
 
             // 🔥 Redirection en fonction du rôle
             return Auth::user()->role === 'createur'
-                ? redirect()->intended('/dashboard-createur')
-                : redirect()->intended('/dashboard-participant');
+                ? redirect()->intended('/createur/dashboard')
+                : redirect()->intended('/participant/dashboard');
         }
 
         return back()->withErrors([
