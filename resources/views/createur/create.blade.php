@@ -7,23 +7,28 @@
     <form action="{{ route('events.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="name" class="form-label text-white">Nom de l'événement</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+            <label for="title" class="form-label text-white">Nom de l'événement</label>
+            <input type="text" class="form-control" id="title" name="title" required>
         </div>
 
         <div class="mb-3">
-            <label for="name" class="form-label text-white">Description</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+            <label for="description" class="form-label text-white">Description</label>
+            <input type="text" class="form-control" id="description" name="description" required>
         </div>
 
         <div class="mb-3">
             <label for="date" class="form-label text-white">Date de l'événement</label>
             <input type="date" class="form-control" id="date" name="date" required>
         </div>
-        
+
         <div class="mb-3">
-            <label for="name" class="form-label text-white">Localisation</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+            <label for="time">Heure</label>
+            <input type="time" name="time" id="time" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="location" class="form-label text-white">Localisation</label>
+            <input type="text" class="form-control" id="location" name="location" required>
         </div>
 
 

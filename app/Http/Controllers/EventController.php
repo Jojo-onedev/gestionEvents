@@ -24,28 +24,33 @@ class EventController extends Controller
 
     // Enregistrer un nouvel événement
     public function store(Request $request)
-    {
-        // dd($request->all());
+{
+    // dd($request->all());
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'date' => 'required|date',
-            'location' => 'required|string|max:255',
-            'time' => 'required',
-        ]);
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'date' => 'required|date',
+        'location' => 'required|string|max:255',
+        'time' => 'required',
+    ]);
 
-        Event::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'date' => $request->date,
-            'location' => $request->location,
-            'time' => $request->time,
-            'user_id' => Auth::id(), // Associer l'événement au créateur
-        ]);
 
+    $event = Event::create([
+        'title' => $request->title,
+        'description' => $request->description,
+        'date' => $request->date,
+        'location' => $request->location,
+        'time' => $request->time ?? '00:00:00',
+        'user_id' => Auth::id(), // Associer l'événement à l'utilisateur connecté
+    ]);
+
+    if ($event) {
         return redirect()->route('createur.index')->with('success', 'Événement créé avec succès.');
+    } else {
+        return redirect()->back()->with('error', 'Erreur lors de la création de l\'événement.');
     }
+}
 
     // Afficher le formulaire de modification
     public function edit(Event $event)
@@ -64,6 +69,8 @@ class EventController extends Controller
             abort(403, "Vous n'êtes pas autorisé à modifier cet événement.");
         }
 
+        // dd($request->all());
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -73,6 +80,7 @@ class EventController extends Controller
         ]);
 
         $event->update($request->all());
+
 
         return redirect()->route('createur.index')->with('success', 'Événement mis à jour avec succès.');
     }
@@ -91,11 +99,19 @@ class EventController extends Controller
 
     // Permet aux participants de s'inscrire à un événement
     public function participate($id)
-    {
-        $event = Event::findOrFail($id);
-        auth()->user()->eventsParticipated()->attach($event);
-        return redirect()->route('participant.dashboard')->with('success', 'Vous êtes inscrit à l\'événement.');
+{
+    $event = Event::findOrFail($id);
+    $user = Auth::user();
+
+    // Vérifier si l'utilisateur est déjà inscrit
+    if (!$event->participants()->where('user_id', $user->id)->exists()) {
+        $event->participants()->attach($user->id);
+        return redirect()->back()->with('success', 'Vous participez à cet événement.');
     }
+
+    return redirect()->back()->with('error', 'Vous participez déjà à cet événement.');
+}
+
 
     // Permet aux participants de se désinscrire d'un événement
     public function unparticipate($id)
@@ -104,4 +120,11 @@ class EventController extends Controller
         auth()->user()->eventsParticipated()->detach($event);
         return redirect()->route('participant.dashboard')->with('success', 'Vous êtes désinscrit de l\'événement.');
     }
+
+    public function showEventsForParticipants()
+{
+    $events = Event::all(); // Récupère tous les événements
+    return view('participant.events', compact('events'));
+}
+
 }

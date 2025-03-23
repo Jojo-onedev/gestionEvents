@@ -13,6 +13,7 @@ class Event extends Model {
         'description',
         'date',
         'location',
+        'time',
         'user_id',
     ];
 

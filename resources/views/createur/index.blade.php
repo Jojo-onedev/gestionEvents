@@ -12,6 +12,7 @@
                 <th>Title</th>
                 <th>Description</th>
                 <th>Date</th>
+                <th>Time</th>
                 <th>Localisation</th>
                 <th>Actions</th>
             </tr>
@@ -22,6 +23,7 @@
                     <td>{{ $event->title }}</td>
                     <td>{{ $event->description }}</td>
                     <td>{{ $event->date }}</td>
+                    <td>{{ $event->time }}</td>
                     <td>{{ $event->location }}</td>
                     <td>
                         <a href="{{ route('events.edit', $event->id) }}" class="btn btn-warning btn-sm">Modifier</a>
